@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
@@ -20,395 +21,583 @@
     --teal:#59b9b6;
     --rose:#e0637a;
     --radius:10px;
-  }
+  }*{box-sizing:border-box; margin:0; padding:0;}
 
-  *{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
 
-  html{scroll-behavior:smooth;}
+body{
+background:var(--bg);
+color:var(--text);
+font-family:'IBM Plex Sans', sans-serif;
+line-height:1.55;
+-webkit-font-smoothing:antialiased;
+}
 
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'IBM Plex Sans', sans-serif;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-  }
+.mono{ font-family:'JetBrains Mono', monospace; }
 
-  .mono{ font-family:'JetBrains Mono', monospace; }
+a{ color:inherit; }
 
-  a{ color:inherit; }
+body::before{
+content:"";
+position:fixed; inset:0;
+background-image:
+linear-gradient(var(--border) 1px, transparent 1px),
+linear-gradient(90deg, var(--border) 1px, transparent 1px);
+background-size: 48px 48px;
+opacity:0.06;
+pointer-events:none;
+z-index:0;
+}
 
-  /* subtle scanline / grid texture in background */
-  body::before{
-    content:"";
-    position:fixed; inset:0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 48px 48px;
-    opacity:0.06;
-    pointer-events:none;
-    z-index:0;
-  }
+.wrap{
+max-width:760px;
+margin:0 auto;
+padding: 72px 24px 120px;
+position:relative;
+z-index:1;
+}
 
-  .wrap{
-    max-width:760px;
-    margin:0 auto;
-    padding: 72px 24px 120px;
-    position:relative;
-    z-index:1;
-  }
+header{
+margin-bottom: 64px;
+}
 
-  /* ---------- HEADER / TERMINAL BOOT ---------- */
-  header{
-    margin-bottom: 64px;
-  }
+.prompt-line{
+font-family:'JetBrains Mono', monospace;
+font-size:0.85rem;
+color:var(--teal);
+margin-bottom:10px;
+display:flex;
+gap:8px;
+}
 
-  .prompt-line{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.85rem;
-    color:var(--teal);
-    margin-bottom:10px;
-    display:flex;
-    gap:8px;
-  }
+.prompt-line .path{ color:var(--muted); }
 
-  .prompt-line .path{ color:var(--muted); }
+h1{
+font-family:'Space Grotesk', sans-serif;
+font-weight:700;
+font-size:clamp(2rem, 6vw, 3rem);
+letter-spacing:-0.02em;
+margin-bottom:6px;
+}
 
-  h1{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:clamp(2rem, 6vw, 3rem);
-    letter-spacing:-0.02em;
-    margin-bottom:6px;
-  }
+.cursor{
+display:inline-block;
+width:0.5em;
+height:1em;
+background:var(--amber);
+margin-left:4px;
+vertical-align:-0.12em;
+animation:blink 1s steps(1) infinite;
+}
 
-  .cursor{
-    display:inline-block;
-    width:0.5em;
-    height:1em;
-    background:var(--amber);
-    margin-left:4px;
-    vertical-align:-0.12em;
-    animation:blink 1s steps(1) infinite;
-  }
-  @media (prefers-reduced-motion: reduce){ .cursor{ animation:none; } }
-  @keyframes blink{ 50%{ opacity:0; } }
+@media (prefers-reduced-motion: reduce){
+.cursor{ animation:none; }
+}
 
-  .tagline{
-    color:var(--muted);
-    font-size:1.05rem;
-    max-width:52ch;
-    margin-bottom: 28px;
-  }
+@keyframes blink{
+50%{ opacity:0; }
+}
 
-  .status-bar{
-    display:flex;
-    flex-wrap:wrap;
-    gap: 10px 22px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-    color:var(--muted);
-    border-top:1px solid var(--border);
-    padding-top:18px;
-  }
-  .status-bar span b{ color:var(--text); font-weight:500; }
-  .status-bar .dot{
-    width:7px; height:7px; border-radius:50%;
-    display:inline-block; margin-right:6px;
-    background:var(--teal);
-  }
+.tagline{
+color:var(--muted);
+font-size:1.05rem;
+max-width:52ch;
+margin-bottom: 28px;
+}
 
-  /* ---------- SECTION LABEL ---------- */
-  .section-label{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:0.12em;
-    margin: 56px 0 18px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-  }
-  .section-label::after{
-    content:"";
-    flex:1;
-    height:1px;
-    background:var(--border);
-  }
+.status-bar{
+display:flex;
+flex-wrap:wrap;
+gap: 10px 22px;
+font-family:'JetBrains Mono', monospace;
+font-size:0.78rem;
+color:var(--muted);
+border-top:1px solid var(--border);
+padding-top:18px;
+}
 
-  /* ---------- PROJECT LOG ---------- */
-  .log{
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-  }
+.status-bar span b{
+color:var(--text);
+font-weight:500;
+}
 
-  .entry{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    padding:20px 22px;
-    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-  }
-  .entry:hover{
-    background:var(--panel-hover);
-    border-color:#39404f;
-  }
+.status-bar .dot{
+width:7px;
+height:7px;
+border-radius:50%;
+display:inline-block;
+margin-right:6px;
+background:var(--teal);
+}
 
-  .entry-top{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    gap:12px;
-    flex-wrap:wrap;
-    margin-bottom:8px;
-  }
+.section-label{
+font-family:'JetBrains Mono', monospace;
+font-size:0.78rem;
+color:var(--muted);
+text-transform:uppercase;
+letter-spacing:0.12em;
+margin: 56px 0 18px;
+display:flex;
+align-items:center;
+gap:12px;
+}
 
-  .entry-id{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-    color:var(--amber);
-  }
+.section-label::after{
+content:"";
+flex:1;
+height:1px;
+background:var(--border);
+}
 
-  .entry-title{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600;
-    font-size:1.15rem;
-  }
+.log{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
 
-  .entry-status{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.72rem;
-    color:var(--muted);
-    display:flex;
-    align-items:center;
-    white-space:nowrap;
-  }
-  .entry-status .dot{
-    width:7px; height:7px; border-radius:50%;
-    display:inline-block; margin-right:6px;
-  }
-  .status-live .dot{ background:var(--teal); }
-  .status-build .dot{ background:var(--amber); }
-  .status-todo .dot{ background:var(--rose); }
+.entry{
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:20px 22px;
+transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
 
-  .entry-desc{
-    color:var(--muted);
-    font-size:0.95rem;
-    margin-bottom:14px;
-    max-width:60ch;
-  }
+.entry:hover{
+background:var(--panel-hover);
+border-color:#39404f;
+}
 
-  .entry-meta{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-  }
+.entry-top{
+display:flex;
+align-items:baseline;
+justify-content:space-between;
+gap:12px;
+flex-wrap:wrap;
+margin-bottom:8px;
+}
 
-  .stack{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-  }
-  .stack span{
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.7rem;
-    color:var(--teal);
-    border:1px solid #2f4a49;
-    background:rgba(89,185,182,0.06);
-    padding:3px 8px;
-    border-radius:5px;
-  }
+.entry-id{
+font-family:'JetBrains Mono', monospace;
+font-size:0.78rem;
+color:var(--amber);
+}
 
-  .entry-links{
-    display:flex;
-    gap:14px;
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-  }
-  .entry-links a{
-    text-decoration:none;
-    border-bottom:1px solid transparent;
-    color:var(--text);
-  }
-  .entry-links a:hover{
-    border-bottom-color:var(--amber);
-    color:var(--amber);
-  }
-  .entry-links .disabled{
-    color:var(--muted);
-    cursor:default;
-  }
+.entry-title{
+font-family:'Space Grotesk', sans-serif;
+font-weight:600;
+font-size:1.15rem;
+}
 
-  /* ---------- FOOTER ---------- */
-  footer{
-    margin-top:72px;
-    padding-top:24px;
-    border-top:1px solid var(--border);
-    font-family:'JetBrains Mono', monospace;
-    font-size:0.78rem;
-    color:var(--muted);
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-  footer a{ color:var(--teal); text-decoration:none; }
-  footer a:hover{ color:var(--amber); }
+.entry-status{
+font-family:'JetBrains Mono', monospace;
+font-size:0.72rem;
+color:var(--muted);
+display:flex;
+align-items:center;
+white-space:nowrap;
+}
 
-  @media (max-width:520px){
-    .wrap{ padding:48px 18px 90px; }
-    .entry-top{ flex-direction:column; align-items:flex-start; }
-  }
+.entry-status .dot{
+width:7px;
+height:7px;
+border-radius:50%;
+display:inline-block;
+margin-right:6px;
+}
+
+.status-live .dot{ background:var(--teal); }
+.status-build .dot{ background:var(--amber); }
+.status-todo .dot{ background:var(--rose); }
+
+.entry-desc{
+color:var(--muted);
+font-size:0.95rem;
+margin-bottom:14px;
+max-width:60ch;
+}
+
+.entry-meta{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:12px;
+}
+
+.stack{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+}
+
+.stack span{
+font-family:'JetBrains Mono', monospace;
+font-size:0.7rem;
+color:var(--teal);
+border:1px solid #2f4a49;
+background:rgba(89,185,182,0.06);
+padding:3px 8px;
+border-radius:5px;
+}
+
+.entry-links{
+display:flex;
+gap:14px;
+font-family:'JetBrains Mono', monospace;
+font-size:0.78rem;
+}
+
+.entry-links a{
+text-decoration:none;
+border-bottom:1px solid transparent;
+color:var(--text);
+}
+
+.entry-links a:hover{
+border-bottom-color:var(--amber);
+color:var(--amber);
+}
+
+.entry-links .disabled{
+color:var(--muted);
+cursor:default;
+}
+
+/* ---------- FOOTER ---------- */
+
+footer{
+margin-top:72px;
+padding-top:24px;
+border-top:1px solid var(--border);
+font-family:'JetBrains Mono', monospace;
+font-size:0.78rem;
+color:var(--muted);
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.footer-links{
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+}
+
+footer a{
+color:var(--teal);
+text-decoration:none;
+}
+
+footer a:hover{
+color:var(--amber);
+}
+
+@media (max-width:520px){
+.wrap{
+padding:48px 18px 90px;
+}
+
+.entry-top{
+  flex-direction:column;
+  align-items:flex-start;
+}
+
+footer{
+  align-items:flex-start;
+  flex-direction:column;
+}
+
+.footer-links{
+  gap:12px;
+}
+
+}
 </style>
-</head>
-<body>
-<div class="wrap">
 
-  <header>
-    <div class="prompt-line"><span class="path">~/portfolio</span><span>$ whoami</span></div>
-    <h1>Elly0x<span class="cursor"></span></h1>
-    <p class="tagline">Estudante de Ciência da Computação — construindo um projeto de cada vez, do zero ao deploy.</p>
-    <div class="status-bar">
-      <span><span class="dot"></span><b>1º ano</b> · Bacharelado em CC</span>
-      <span class="mono">7 repositórios versionados</span>
-      <span class="mono">último commit: em progresso</span>
+</head><body>
+<div class="wrap">  <header>
+    <div class="prompt-line">
+      <span class="path">~/portfolio</span>
+      <span>$ whoami</span>
+    </div><h1>Elly0x<span class="cursor"></span></h1>
+
+<p class="tagline">
+  Estudante de Ciência da Computação — construindo um projeto de cada vez, do zero ao deploy.
+</p>
+
+<div class="status-bar">
+  <span>
+    <span class="dot"></span>
+    <b>1º ano</b> · Bacharelado em CC
+  </span>
+
+  <span class="mono">8 repositórios versionados</span>
+
+  <span class="mono">último commit: em progresso</span>
+</div>
+
+  </header>  <div class="section-label">projetos</div>  <div class="log"><article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#01</span>
+      <span class="entry-title">Maceió — Landing de Turismo</span>
     </div>
-  </header>
 
-  <div class="section-label">projetos</div>
-
-  <div class="log">
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#01</span> <span class="entry-title">Maceió — Landing de Turismo</span></div>
-        <div class="entry-status status-live"><span class="dot"></span>ativar GitHub Pages</div>
-      </div>
-      <p class="entry-desc">Landing page inspirada em sites de destino turístico: hero em tela cheia, seções alternadas de imagem e texto, scroll storytelling ao longo da orla de Maceió (AL).</p>
-      <div class="entry-meta">
-        <div class="stack"><span>HTML5</span><span>CSS3</span><span>JS</span></div>
-        <div class="entry-links">
-          <a href="https://elly0x.github.io/maceio-tourism/" target="_blank" rel="noopener">demo</a>
-          <a href="https://github.com/Elly0x/maceio-tourism" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#02</span> <span class="entry-title">Deriva — Pranchas de Surf</span></div>
-        <div class="entry-status status-live"><span class="dot"></span>ativar GitHub Pages</div>
-      </div>
-      <p class="entry-desc">Landing page para uma marca fictícia de pranchas shapeadas sob encomenda. Ficha técnica de produto estilizada como etiqueta de shaper, galeria arrastável.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>HTML5</span><span>CSS3</span><span>JS</span></div>
-        <div class="entry-links">
-          <a href="https://elly0x.github.io/deriva-surfboards/" target="_blank" rel="noopener">demo</a>
-          <a href="https://github.com/Elly0x/deriva-surfboards" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#03</span> <span class="entry-title">Pódio — Curiosidades Olímpicas</span></div>
-        <div class="entry-status status-live"><span class="dot"></span>ativar GitHub Pages</div>
-      </div>
-      <p class="entry-desc">Visão geral do esporte olímpico: linha do tempo histórica em scroll horizontal, grid de modalidades e curiosidades.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>HTML5</span><span>CSS3</span><span>JS</span></div>
-        <div class="entry-links">
-          <a href="https://elly0x.github.io/podioolimpico/" target="_blank" rel="noopener">demo</a>
-          <a href="https://github.com/Elly0x/podioolimpico" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#04</span> <span class="entry-title">Meio-Campo — Conteúdo + Quiz</span></div>
-        <div class="entry-status status-live"><span class="dot"></span>ativar GitHub Pages</div>
-      </div>
-      <p class="entry-desc">Site de conteúdo sobre futebol masculino e feminino, com matérias curtas e um quiz interativo estilo disputa de pênaltis, com placar dinâmico em JS puro.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>HTML5</span><span>CSS Grid</span><span>JS</span></div>
-        <div class="entry-links">
-          <a href="https://elly0x.github.io/meio-campo-futebol/" target="_blank" rel="noopener">demo</a>
-          <a href="https://github.com/Elly0x/meio-campo-futebol" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#05</span> <span class="entry-title">BookShelf — App de Leitura</span></div>
-        <div class="entry-status status-live"><span class="dot"></span>no ar</div>
-      </div>
-      <p class="entry-desc">Aplicativo de estante de livros inspirado no Skoob: organização por status de leitura, avaliações, resenhas e perfil social. Front-end mobile com backend próprio.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>React Native</span><span>Expo</span><span>TypeScript</span><span>tRPC</span></div>
-        <div class="entry-links">
-          <a href="https://book-shelf-jet.vercel.app" target="_blank" rel="noopener">demo</a>
-          <a href="https://github.com/Elly0x/BookShelf" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#06</span> <span class="entry-title">Magic Cube Game</span></div>
-        <div class="entry-status status-build"><span class="dot"></span>build pendente</div>
-      </div>
-      <p class="entry-desc">Cubo mágico interativo em 3D: rotação livre, embaralhar e resolver, com visual minimalista geométrico-futurista.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>React</span><span>Three.js</span><span>TypeScript</span></div>
-        <div class="entry-links">
-          <span class="disabled">demo (hospedar após build)</span>
-          <a href="https://github.com/Elly0x/magic-cube-game" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-
-    <article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#07</span> <span class="entry-title">Math Darts Game</span></div>
-        <div class="entry-status status-todo"><span class="dot"></span>capturas pendentes</div>
-      </div>
-      <p class="entry-desc">Mini game de lógica e matemática inspirado em um puzzle de Blue Prince: resolva o tabuleiro seguindo operações e cores do centro para as bordas.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>Python</span><span>Tkinter</span></div>
-        <div class="entry-links">
-          <span class="disabled">app desktop — sem demo web</span>
-          <a href="https://github.com/Elly0x/math-darts-game" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
-<article class="entry">
-      <div class="entry-top">
-        <div><span class="entry-id mono">#08</span> <span class="entry-title">Testador de Força de Senhas</span></div>
-        <div class="entry-status status-live"><span class="dot"></span>no ar</div>
-      </div>
-      <p class="entry-desc">Avalia a complexidade de uma senha em tempo real, com base em regras de tamanho e tipos de caracteres: minúscula, maiúscula, número, símbolo e ausência de repetições.</p>
-      <div class="entry-meta">
-        <div class="stack"><span>HTML5</span><span>CSS3</span><span>JS</span></div>
-        <div class="entry-links">
-          <a href="https://elly0x.github.io/password-strength-tester/" target="_blank" rel="noopener">demo</a>
-          <a href="https://github.com/Elly0x/password-strength-tester" target="_blank" rel="noopener">código</a>
-        </div>
-      </div>
-    </article>
+    <div class="entry-status status-live">
+      <span class="dot"></span>ativar GitHub Pages
+    </div>
   </div>
 
-  <footer>
-    <span>build log — atualizado manualmente a cada novo projeto</span>
-    <a href="https://github.com/Elly0x" target="_blank" rel="noopener">github.com/Elly0x →</a>
-  </footer>
+  <p class="entry-desc">
+    Landing page inspirada em sites de destino turístico: hero em tela cheia,
+    seções alternadas de imagem e texto, scroll storytelling ao longo da orla de Maceió (AL).
+  </p>
 
+  <div class="entry-meta">
+    <div class="stack">
+      <span>HTML5</span>
+      <span>CSS3</span>
+      <span>JS</span>
+    </div>
+
+    <div class="entry-links">
+      <a href="https://elly0x.github.io/maceio-tourism/" target="_blank" rel="noopener">demo</a>
+      <a href="https://github.com/Elly0x/maceio-tourism" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#02</span>
+      <span class="entry-title">Deriva — Pranchas de Surf</span>
+    </div>
+
+    <div class="entry-status status-live">
+      <span class="dot"></span>ativar GitHub Pages
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Landing page para uma marca fictícia de pranchas shapeadas sob encomenda.
+    Ficha técnica de produto estilizada como etiqueta de shaper, galeria arrastável.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>HTML5</span>
+      <span>CSS3</span>
+      <span>JS</span>
+    </div>
+
+    <div class="entry-links">
+      <a href="https://elly0x.github.io/deriva-surfboards/" target="_blank" rel="noopener">demo</a>
+      <a href="https://github.com/Elly0x/deriva-surfboards" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#03</span>
+      <span class="entry-title">Pódio — Curiosidades Olímpicas</span>
+    </div>
+
+    <div class="entry-status status-live">
+      <span class="dot"></span>ativar GitHub Pages
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Visão geral do esporte olímpico: linha do tempo histórica em scroll horizontal,
+    grid de modalidades e curiosidades.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>HTML5</span>
+      <span>CSS3</span>
+      <span>JS</span>
+    </div>
+
+    <div class="entry-links">
+      <a href="https://elly0x.github.io/podioolimpico/" target="_blank" rel="noopener">demo</a>
+      <a href="https://github.com/Elly0x/podioolimpico" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#04</span>
+      <span class="entry-title">Meio-Campo — Conteúdo + Quiz</span>
+    </div>
+
+    <div class="entry-status status-live">
+      <span class="dot"></span>ativar GitHub Pages
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Site de conteúdo sobre futebol masculino e feminino, com matérias curtas
+    e um quiz interativo estilo disputa de pênaltis, com placar dinâmico em JS puro.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>HTML5</span>
+      <span>CSS Grid</span>
+      <span>JS</span>
+    </div>
+
+    <div class="entry-links">
+      <a href="https://elly0x.github.io/meio-campo-futebol/" target="_blank" rel="noopener">demo</a>
+      <a href="https://github.com/Elly0x/meio-campo-futebol" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#05</span>
+      <span class="entry-title">BookShelf — App de Leitura</span>
+    </div>
+
+    <div class="entry-status status-live">
+      <span class="dot"></span>no ar
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Aplicativo de estante de livros inspirado no Skoob: organização por status de leitura,
+    avaliações, resenhas e perfil social. Front-end mobile com backend próprio.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>React Native</span>
+      <span>Expo</span>
+      <span>TypeScript</span>
+      <span>tRPC</span>
+    </div>
+
+    <div class="entry-links">
+      <a href="https://book-shelf-jet.vercel.app" target="_blank" rel="noopener">demo</a>
+      <a href="https://github.com/Elly0x/BookShelf" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#06</span>
+      <span class="entry-title">Magic Cube Game</span>
+    </div>
+
+    <div class="entry-status status-build">
+      <span class="dot"></span>build pendente
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Cubo mágico interativo em 3D: rotação livre, embaralhar e resolver,
+    com visual minimalista geométrico-futurista.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>React</span>
+      <span>Three.js</span>
+      <span>TypeScript</span>
+    </div>
+
+    <div class="entry-links">
+      <span class="disabled">demo (hospedar após build)</span>
+      <a href="https://github.com/Elly0x/magic-cube-game" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#07</span>
+      <span class="entry-title">Math Darts Game</span>
+    </div>
+
+    <div class="entry-status status-todo">
+      <span class="dot"></span>capturas pendentes
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Mini game de lógica e matemática inspirado em um puzzle de Blue Prince:
+    resolva o tabuleiro seguindo operações e cores do centro para as bordas.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>Python</span>
+      <span>Tkinter</span>
+    </div>
+
+    <div class="entry-links">
+      <span class="disabled">app desktop — sem demo web</span>
+      <a href="https://github.com/Elly0x/math-darts-game" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+<article class="entry">
+  <div class="entry-top">
+    <div>
+      <span class="entry-id mono">#08</span>
+      <span class="entry-title">Testador de Força de Senhas</span>
+    </div>
+
+    <div class="entry-status status-live">
+      <span class="dot"></span>no ar
+    </div>
+  </div>
+
+  <p class="entry-desc">
+    Avalia a complexidade de uma senha em tempo real, com base em regras de tamanho
+    e tipos de caracteres: minúscula, maiúscula, número, símbolo e ausência de repetições.
+  </p>
+
+  <div class="entry-meta">
+    <div class="stack">
+      <span>HTML5</span>
+      <span>CSS3</span>
+      <span>JS</span>
+    </div>
+
+    <div class="entry-links">
+      <a href="https://elly0x.github.io/password-strength-tester/" target="_blank" rel="noopener">demo</a>
+      <a href="https://github.com/Elly0x/password-strength-tester" target="_blank" rel="noopener">código</a>
+    </div>
+  </div>
+</article>
+
+  </div>  <footer>
+    <span>build log — atualizado manualmente a cada novo projeto</span><div class="footer-links">
+  <a href="https://github.com/Elly0x" target="_blank" rel="noopener">
+    github.com/Elly0x →
+  </a>
+
+  <a href="https://www.linkedin.com/in/janaylle-s-007185223/" target="_blank" rel="noopener">
+    linkedin.com/in/janaylle-s →
+  </a>
 </div>
+
+  </footer></div>
 </body>
 </html>
