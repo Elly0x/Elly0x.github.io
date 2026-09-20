@@ -185,6 +185,16 @@ main{display:flex;flex-direction:column;gap:14px;min-width:0;}
 .row a.t:hover{color:var(--amber);}
 .row .sub{font-size:12px;color:var(--muted);margin-top:2px;}
 .empty{color:var(--muted);font-size:13px;}
+.row p{font-size:13px;margin-top:4px;}
+.box-body p.obj{color:var(--text);}
+.box-body p.obj::before{content:"> ";color:var(--amber);font-weight:700;}
+.nota{padding:16px 0;border-bottom:2px dotted var(--border);}
+.nota:first-child{padding-top:0;}
+.nota:last-child{border-bottom:0;padding-bottom:0;}
+.nota h3{font-family:var(--pix);font-weight:400;font-size:22px;line-height:1.25;color:var(--amber);}
+.nota .data{font-size:12px;color:var(--muted);margin-top:2px;}
+.nota p{margin-top:12px;}
+.nota-links{margin-top:14px;}
 
 /* ---------- status ---------- */
 .status{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap;}
@@ -309,6 +319,7 @@ noscript p{color:var(--rose);}
           <div class="box-body">
             <p class="big">oi, eu sou a Elly0x<span class="star">*</span></p>
             <p>Estudante de Ciência da Computação, construindo um projeto de cada vez, do zero ao deploy. Aqui ficam meus projetos e o diário do que estou aprendendo.</p>
+            <p class="obj" id="objetivo"></p>
             <div class="actions">
               <a class="btn" href="#projetos">ver projetos</a>
               <a class="btn ghost" href="#diario">ler o diário</a>
@@ -366,14 +377,14 @@ noscript p{color:var(--rose);}
         <div class="box">
           <div class="box-title">como este site foi feito</div>
           <div class="box-body">
-            <p>HTML, CSS e JavaScript puros, sem framework, hospedado no GitHub Pages e escrito pelo tablet. A arte do topo e as miniaturas dos projetos são desenhadas em pixel por código, na hora que a página abre.</p>
+            <p>Feito com HTML, CSS e JavaScript, sem framework, hospedado no GitHub Pages e escrito pelo tablet. A arte do topo e as miniaturas dos projetos são desenhadas em pixel por código, na hora que a página abre.</p>
             <p class="muted">Fontes: Silkscreen e Pixelify Sans (SIL Open Font License) e JetBrains Mono.</p>
           </div>
         </div>
         <div class="box">
           <div class="box-title">links</div>
           <div class="box-body">
-            <ul style="list-style:none">
+            <ul id="links-sobre" style="list-style:none">
               <li><a href="https://github.com/Elly0x" target="_blank" rel="noopener">github.com/Elly0x</a></li>
               <li><a href="https://www.linkedin.com/in/janaylle-s-007185223/" target="_blank" rel="noopener">linkedin.com/in/janaylle-s</a></li>
             </ul>
@@ -402,7 +413,7 @@ noscript p{color:var(--rose);}
       <div class="box">
         <div class="box-title">links</div>
         <div class="box-body">
-          <ul>
+          <ul id="links-lateral">
             <li><a href="https://github.com/Elly0x" target="_blank" rel="noopener">GitHub</a></li>
             <li><a href="https://www.linkedin.com/in/janaylle-s-007185223/" target="_blank" rel="noopener">LinkedIn</a></li>
           </ul>
@@ -413,7 +424,7 @@ noscript p{color:var(--rose);}
         <div class="box-title">botões</div>
         <div class="box-body">
           <div class="badges">
-            <span class="badge">html css js puros</span>
+            <span class="badge">html css js</span>
             <span class="badge amber">feito no tablet</span>
             <span class="badge">github pages</span>
           </div>
@@ -440,7 +451,12 @@ noscript p{color:var(--rose);}
      status: 'live' (no ar), 'soon' (demo em breve), 'code' (só código)
      Pra escrever uma nota no diário, adicione um item em NOTAS.
      ========================================================== */
-  var SITE = { versao: '2.0', atualizado: '18 set 2026' };
+  var SITE = { versao: '2.1', atualizado: '19 set 2026' };
+
+  var OBJETIVO = 'Busco minha primeira oportunidade em TI, com foco em suporte técnico e cibersegurança.';
+
+  /* Pra mostrar um e-mail de contato, preencha aqui (fica vazio = não aparece). */
+  var CONTATO = { email: '' };
 
   var AGORA = ['cibersegurança', 'lógica de programação em Python'];
 
@@ -476,7 +492,7 @@ noscript p{color:var(--rose);}
       titulo: 'Testador de Força de Senhas',
       status: 'live',
       tags: ['cibersegurança', 'web'],
-      desc: 'Avalia a complexidade de uma senha em tempo real, com base em regras de tamanho e tipos de caracteres: minúscula, maiúscula, número, símbolo e ausência de repetições.',
+      desc: 'Avalia a força de uma senha em tempo real: regras de composição, checagem contra senhas comuns, dicas de melhoria e estimativa do tempo para quebrá-la.',
       stack: ['HTML5', 'CSS3', 'JS'],
       demo: 'https://elly0x.github.io/password-strength-tester/',
       codigo: 'https://github.com/Elly0x/password-strength-tester'
@@ -502,12 +518,31 @@ noscript p{color:var(--rose);}
   ];
 
   var NOTAS = [
-    /* Exemplo de nota:
-    { data: '2026-09-18', titulo: 'Título da nota', resumo: 'Uma ou duas frases sobre o que aprendi.', link: 'https://...' }
-    */
+    {
+      data: '2026-09-19',
+      titulo: 'Cifras de César e Vigenère: aritmética modular na prática',
+      resumo: 'Como duas cifras clássicas funcionam, por que o César quebra em segundos e como o Vigenère tenta resistir.',
+      corpo: [
+        'Construí uma página que cifra, decifra e quebra as cifras de César e de Vigenère, mostrando cada letra sendo trocada em um log. A ideia era enxergar o que acontece por trás da criptografia, em vez de só ler a teoria.',
+        'O ponto de partida é transformar letras em números (A = 0, B = 1, até Z = 25) e usar aritmética modular. No César, cada letra anda uma quantidade fixa k de posições: a conta é (x + k) mod 26. Pra decifrar, subtrai-se k. Um detalhe que pega de surpresa: em JavaScript o resto de um número negativo pode sair negativo, então é preciso somar 26 antes de aplicar o mod.',
+        'O César tem só 25 chaves possíveis. Por isso a aba "Quebrar César" testa todas de uma vez, e basta ler qual resultado faz sentido. Isso é força bruta na prática, e mostra por que o tamanho do espaço de chaves importa.',
+        'O Vigenère usa uma palavra-chave: cada letra do texto é deslocada de acordo com a letra correspondente da chave, que se repete. Isso esconde a frequência das letras, mas não por completo. Com análise de frequência e o método de Kasiski, dá pra descobrir o tamanho da chave e quebrar a cifra.',
+        'Próximo passo: implementar a análise de frequência de letras pra atacar o Vigenère.'
+      ],
+      links: [
+        { texto: 'demo', href: 'https://elly0x.github.io/cifras-cesar-vigenere/' },
+        { texto: 'código', href: 'https://github.com/Elly0x/cifras-cesar-vigenere' }
+      ]
+    }
+    /* Modelo de nota: { data: 'AAAA-MM-DD', titulo: '...', resumo: '...', corpo: ['parágrafo 1', 'parágrafo 2'], links: [{ texto: '...', href: '...' }] } */
   ];
 
   var CHANGELOG = [
+    {
+      versao: '2.1',
+      data: '19 set 2026',
+      texto: 'Objetivo na home, primeira nota do diário e Testador de Senhas atualizado, com lista de senhas comuns, dicas e estimativa de tempo.'
+    },
     {
       versao: '2.0',
       data: '18 set 2026',
@@ -784,19 +819,54 @@ noscript p{color:var(--rose);}
     box.appendChild(mais);
   }
 
-  function renderNotas(container, limite) {
+  function notaVazia(container) {
+    container.appendChild(el('p', 'empty', 'Nada por aqui ainda. As primeiras notas de estudo chegam em breve.'));
+  }
+
+  function renderNotasHome(container) {
     limpar(container);
-    if (!NOTAS.length) {
-      container.appendChild(el('p', 'empty', 'Nada por aqui ainda. As primeiras notas de estudo chegam em breve.'));
-      return;
-    }
-    NOTAS.slice(0, limite || NOTAS.length).forEach(function (n) {
+    if (!NOTAS.length) { notaVazia(container); return; }
+    NOTAS.slice(0, 3).forEach(function (n) {
       var r = el('div', 'row');
-      if (n.link) r.appendChild(ext(n.link, n.titulo, 't'));
-      else r.appendChild(el('strong', '', n.titulo));
+      var a = el('a', 't', n.titulo);
+      a.href = '#diario';
+      r.appendChild(a);
       r.appendChild(el('div', 'sub', dataBR(n.data)));
       if (n.resumo) r.appendChild(el('p', 'muted', n.resumo));
       container.appendChild(r);
+    });
+  }
+
+  function renderNotasDiario(container) {
+    limpar(container);
+    if (!NOTAS.length) { notaVazia(container); return; }
+    NOTAS.forEach(function (n) {
+      var a = el('article', 'nota');
+      a.appendChild(el('h3', '', n.titulo));
+      a.appendChild(el('div', 'data', dataBR(n.data)));
+      (n.corpo || []).forEach(function (par) { a.appendChild(el('p', '', par)); });
+      if (n.links && n.links.length) {
+        var l = el('div', 'proj-links nota-links');
+        n.links.forEach(function (x) { l.appendChild(ext(x.href, x.texto)); });
+        a.appendChild(l);
+      }
+      container.appendChild(a);
+    });
+  }
+
+  function renderObjetivo() {
+    if (OBJETIVO) $('objetivo').textContent = OBJETIVO;
+    else $('objetivo').hidden = true;
+  }
+
+  function renderContato() {
+    if (!CONTATO.email) return;
+    [['links-sobre', CONTATO.email], ['links-lateral', 'E-mail']].forEach(function (par) {
+      var li = el('li');
+      var a = el('a', '', par[1]);
+      a.href = 'mailto:' + CONTATO.email;
+      li.appendChild(a);
+      $(par[0]).appendChild(li);
     });
   }
 
@@ -900,8 +970,10 @@ noscript p{color:var(--rose);}
   renderMarquee();
   renderStats();
   renderRecentes();
-  renderNotas($('notas-home'), 3);
-  renderNotas($('notas-lista'));
+  renderObjetivo();
+  renderContato();
+  renderNotasHome($('notas-home'));
+  renderNotasDiario($('notas-lista'));
   renderChangelog();
   renderFiltros();
   renderLista();
