@@ -448,10 +448,10 @@ noscript p{color:var(--rose);}
      Pra adicionar um projeto, copie um bloco de PROJETOS e cole
      na posição que quiser (a ordem da lista é a ordem no site,
      e os 3 primeiros aparecem em destaque na home).
-     status: 'live' (no ar), 'soon' (demo em breve), 'code' (só código)
+     status: 'live' (no ar), 'soon' (demo em breve), 'code' (repositório, sem demo)
      Pra escrever uma nota no diário, adicione um item em NOTAS.
      ========================================================== */
-  var SITE = { versao: '2.1', atualizado: '19 set 2026' };
+  var SITE = { versao: '2.2', atualizado: '20 set 2026' };
 
   var OBJETIVO = 'Busco minha primeira oportunidade em TI, com foco em suporte técnico e cibersegurança.';
 
@@ -469,6 +469,26 @@ noscript p{color:var(--rose);}
       stack: ['HTML5', 'CSS3', 'JS'],
       demo: 'https://elly0x.github.io/helpdesk-chamados/',
       codigo: 'https://github.com/Elly0x/helpdesk-chamados'
+    },
+    {
+      titulo: 'Base de Conhecimento para Help Desk',
+      status: 'code',
+      tags: ['suporte'],
+      desc: 'Guias em Markdown para incidentes de suporte Nível 1: redefinir senha e desbloquear conta no Active Directory, diagnóstico de rede com ipconfig, ping, nslookup e tracert, e identificação de phishing.',
+      stack: ['Markdown', 'Active Directory', 'Redes'],
+      demo: '',
+      semDemo: 'documentação, sem demo web',
+      codigo: 'https://github.com/Elly0x/helpdesk-knowledge-base'
+    },
+    {
+      titulo: 'Automação de Tarefas de Suporte',
+      status: 'code',
+      tags: ['suporte'],
+      desc: 'Scripts que automatizam rotinas de suporte: um script PowerShell que gera relatório de sistema (RAM, disco e rede) e um script Python de varredura de rede (ping sweep).',
+      stack: ['PowerShell', 'Python'],
+      demo: '',
+      semDemo: 'scripts, sem demo web',
+      codigo: 'https://github.com/Elly0x/it-support-automation'
     },
     {
       titulo: 'Guia de Higiene de Segurança de Contas',
@@ -539,6 +559,11 @@ noscript p{color:var(--rose);}
 
   var CHANGELOG = [
     {
+      versao: '2.2',
+      data: '20 set 2026',
+      texto: 'Entraram os projetos de suporte de TI: a base de conhecimento para Help Desk e os scripts de automação.'
+    },
+    {
       versao: '2.1',
       data: '19 set 2026',
       texto: 'Objetivo na home, primeira nota do diário e Testador de Senhas atualizado, com lista de senhas comuns, dicas e estimativa de tempo.'
@@ -550,7 +575,7 @@ noscript p{color:var(--rose);}
     }
   ];
 
-  var STATUS = { live: 'no ar', soon: 'demo em breve', code: 'só código' };
+  var STATUS = { live: 'no ar', soon: 'demo em breve', code: 'repositório' };
   var FILTROS = ['todos', 'cibersegurança', 'web', 'suporte'];
   var TABS = ['home', 'projetos', 'diario', 'sobre'];
   var filtroAtual = 'todos';
